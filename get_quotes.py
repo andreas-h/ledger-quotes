@@ -55,7 +55,7 @@ def get_consors(isin):
     return date, quote
 
 
-def update_db(firstrun=False):
+def update_db(quiet=True, firstrun=False):
     log = logging.getLogger('get_fondskurse')
     new = pd.DataFrame(columns=['date', 'isin', 'currency', 'quote',
                                 'retrieved_on', 'retrieved_with_version'])
@@ -78,7 +78,8 @@ def update_db(firstrun=False):
             date, quote = get_(isin)
         except Exception:
             log.error('Error while getting quote for {}'.format(isin))
-            raise
+            if not quiet:
+                raise
 
         # jump to next fonds if we don't need to update
         if not firstrun:
@@ -113,5 +114,5 @@ def get_day():
 if __name__ == '__main__':
     log = logging.getLogger('get_fondskurse')
     log.setLevel('INFO')
-    update = update_db()
+    update = update_db(quiet=True, firstrun=False)
     log.info('The following data have been updated:', update)
