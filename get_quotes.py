@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 PATH_DB = '/home2/hilboll/prv/doc/finanzen/ledger/quotes/quotedb.h5'
+PATH_CSV = '/home2/hilboll/prv/doc/finanzen/ledger/quotes.ledger'
 
 URL_CONSORS = 'https://www.consorsbank.de/euroWebDe/-?currentpage=financeinfosHome.Desks.searchresult&%24%24event_minisearch=minisearch&%24part=Home.security-search&fieldselector=quote&pattern={}&searchSubmit=Suchen&%24part=financeinfosHome.Desks.searchresult.ev.PageHead.security-search&%24%24%24event_search=search'
 
@@ -34,7 +35,8 @@ import pandas as pd
 def get_triodos(isin):
     r = str(urllib.request.urlopen(URL_TRIODOS).read())
     quote_regex = re.compile('Aktueller Kurs: \d{2},\d{2}')
-    quote_str = quote_regex.findall(r)[0].split('Aktueller Kurs: ')[1].replace(',', '.')
+    quote_str = quote_regex.findall(r)[0].split(
+            'Aktueller Kurs: ')[1].replace(',', '.')
     quote = float(quote_str)
     date_regex = re.compile('Stand:&nbsp;\d{2}[-/]\d{2}[-/]\d{4}')
     date_str = date_regex.findall(r)[0].split('&nbsp;')[1]
@@ -80,6 +82,7 @@ def update_db(quiet=True, firstrun=False):
             log.error('Error while getting quote for {}'.format(isin))
             if not quiet:
                 raise
+            continue
 
         # jump to next fonds if we don't need to update
         if not firstrun:
@@ -101,14 +104,20 @@ def update_db(quiet=True, firstrun=False):
     return new
 
 
-def get_day():
-    for fonds, isin in FONDS.items():
-        date, quote = get_kurs(isin)
-        print(LEDGERLINE.format(date=date, fonds=fonds, price=quote, now=datetime.now().isoformat()))
-    date, quote = get_triodos()
-    print(LEDGERLINE.format(date=date, fonds='TriodosAktienRechte',
-                            price=quote, now=datetime.now().isoformat()))
-
+def export_prices(path_db, path_export):
+    df = pd.read_hdf(path_db, 'kurse')
+    df.sort_values(by=['date', 'isin'], ascending=[False, True], inplace=True)
+    txt = []
+    txt.append('; generated on {} by get_quotes.py version {}'.format(
+            datetime.now().isoformat(), __version__))
+    for row in df.itertuples(index=False):
+        txt.append(LEDGERLINE.format(date=row.date.date(),
+                                     fonds=FONDS[row.isin][0],
+                                     price=row.quote,
+                                     now=row.retrieved_on.isoformat()))
+    txt[-1] += '\n'
+    with open(path_export, 'w') as f_:
+        f_.writelines('\n'.join(txt))
 
 
 if __name__ == '__main__':
@@ -116,3 +125,4 @@ if __name__ == '__main__':
     log.setLevel('INFO')
     update = update_db(quiet=True, firstrun=False)
     log.info('The following data have been updated:', update)
+    export_prices(PATH_DB, PATH_CSV)
