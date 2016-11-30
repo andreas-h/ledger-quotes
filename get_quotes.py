@@ -19,6 +19,9 @@ FONDS = {'LU0458538880': ('FairWorldFonds', 'consors'),
          'LU0229773345': ('JSSOekoSar', 'consors'),
          'LU0271656133': ('PioneerGlobalEco', 'consors'),
          'LU0061928585': ('OekoVisionClassic', 'consors'),
+         'IE0005895655': ('GreenEffects', 'consors'),
+         'LU0278272413': ('TriodosSustainableEquity', 'consors'),
+         'LU0504302604': ('TriodosSustainableMixed', 'consors'),
          'XX000TRIODOS': ('TriodosAktienRechte', 'triodos'),
          }
 
