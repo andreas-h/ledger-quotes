@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 PATH_DB = '/home2/hilboll/prv/doc/finanzen/ledger/quotedb.h5'
 PATH_CSV = '/home2/hilboll/prv/doc/finanzen/ledger/quotes.ledger'
@@ -9,7 +9,7 @@ URL_CONSORS = 'https://www.consorsbank.de/euroWebDe/-?currentpage=financeinfosHo
 
 URL_TRIODOS = 'https://www.triodos.de/de/privatkunden/investments/aktienaehnliche-rechte/ueberblick/'
 
-LEDGERLINE = 'P {date:%Y/%m/%d} {fonds:20} €{price:.2f}  ; retrieved on {now}'
+LEDGERLINE = 'P {date:%Y/%m/%d} {fonds:25} €{price:.2f}  ; retrieved on {now}'
 
 # P 2016/01/23 22:48:23 690004  € 115.06
 
