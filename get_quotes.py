@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 PATH_DB = '/home2/hilboll/prv/doc/finanzen/ledger/quotedb.h5'
 PATH_CSV = '/home2/hilboll/prv/doc/finanzen/ledger/quotes.ledger'
@@ -41,8 +41,8 @@ def get_triodos(isin):
     quote_str = quote_regex.findall(r)[0].split(
             'Aktueller Kurs: ')[1].replace(',', '.')
     quote = float(quote_str)
-    date_regex = re.compile('Stand:&nbsp;\d{2}[-/]\d{2}[-/]\d{4}')
-    date_str = date_regex.findall(r)[0].split('&nbsp;')[1]
+    date_regex = re.compile('Stand: \d{2}[-/]\d{2}[-/]\d{4}')
+    date_str = date_regex.findall(r)[0].split()[1]
     date = datetime.strptime(date_str, '%d-%m-%Y').date()
     return date, quote
 
