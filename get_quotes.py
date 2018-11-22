@@ -2,8 +2,8 @@
 
 __version__ = '0.0.4'
 
-PATH_DB = '/home2/hilboll/prv/doc/finanzen/ledger/quotedb.h5'
-PATH_CSV = '/home2/hilboll/prv/doc/finanzen/ledger/quotes.ledger'
+PATH_DB = '/home/andreash/doc/finanzen/ledger/quotedb.h5'
+PATH_CSV = '/home/andreash/doc/finanzen/ledger/quotes.ledger'
 
 URL_CONSORS = 'https://www.consorsbank.de/euroWebDe/-?currentpage=financeinfosHome.Desks.searchresult&%24%24event_minisearch=minisearch&%24part=Home.security-search&fieldselector=quote&pattern={}&searchSubmit=Suchen&%24part=financeinfosHome.Desks.searchresult.ev.PageHead.security-search&%24%24%24event_search=search'
 
