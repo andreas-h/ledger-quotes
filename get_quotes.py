@@ -7,7 +7,7 @@ PATH_CSV = '/home2/hilboll/prv/doc/finanzen/ledger/quotes.ledger'
 
 URL_CONSORS = 'https://www.consorsbank.de/euroWebDe/-?currentpage=financeinfosHome.Desks.searchresult&%24%24event_minisearch=minisearch&%24part=Home.security-search&fieldselector=quote&pattern={}&searchSubmit=Suchen&%24part=financeinfosHome.Desks.searchresult.ev.PageHead.security-search&%24%24%24event_search=search'
 
-URL_TRIODOS = 'https://www.triodos.de/de/privatkunden/investments/aktienaehnliche-rechte/ueberblick/'
+URL_TRIODOS = 'https://www.triodos.de/investieren/triodos-aktienaehnliche-rechte'
 
 LEDGERLINE = 'P {date:%Y/%m/%d} {fonds:25} €{price:.2f}  ; retrieved on {now}'
 
@@ -38,8 +38,9 @@ import pandas as pd
 def get_triodos(isin):
     r = str(urllib.request.urlopen(URL_TRIODOS).read())
     quote_regex = re.compile('Aktueller Kurs: \d{2},\d{2}')
+    quote_regex = re.compile('<h3>Aktueller Kurs</h3><p>\d{2},\d{2}')
     quote_str = quote_regex.findall(r)[0].split(
-            'Aktueller Kurs: ')[1].replace(',', '.')
+            '<p>')[1].replace(',', '.')
     quote = float(quote_str)
     date_regex = re.compile('Stand: \d{2}[-/]\d{2}[-/]\d{4}')
     date_str = date_regex.findall(r)[0].split()[1]
