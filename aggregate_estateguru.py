@@ -16,6 +16,7 @@ STRINGS_DE = {
 
 STRINGS_EN = {
     'payment_date': 'Payment Date',
+    'confirmation_date': 'Confirmation Date',
     'cash_flow_status': 'Cash Flow Status',
     'cash_flow_type': 'Cash Flow Type',
     'approved': 'Approved',
@@ -23,11 +24,12 @@ STRINGS_EN = {
     'investment_auto': 'Investment(Auto Invest)',
     'referral': 'Referral',
     'interest': 'Interest',
+    'principal': 'Principal',
 }
 
 def aggregate(filename, string_translation):
     df = pd.read_csv(filename)
-    df.set_index(pd.DatetimeIndex(df[string_translation['payment_date']], dayfirst=True), inplace=True)
+    df.set_index(pd.DatetimeIndex(df[string_translation['confirmation_date']], dayfirst=True), inplace=True)
     df = df[~df.index.isnull()]
     df = df[df[string_translation['cash_flow_status']] == string_translation['approved']]
     df1 = df.groupby([pd.Grouper(freq='M'), string_translation['cash_flow_type']])[string_translation['amount']].sum()
@@ -46,6 +48,10 @@ def format(df, string_translation):
         pass
     try:
         print('  Aktiva:Darlehen:p2p:Estateguru                     € {:>8.2f}  ; Investment(Auto Invest)'.format(- df.loc[(slice(None), string_translation['investment_auto'])].iloc[0]))
+    except (pd.core.indexing.IndexingError, KeyError):
+        pass
+    try:
+        print('  Aktiva:Darlehen:p2p:Estateguru                     € {:>8.2f}  ; Principal'.format(- df.loc[(slice(None), string_translation['principal'])].iloc[0]))
     except (pd.core.indexing.IndexingError, KeyError):
         pass
     print('  Aktiva:Sparkonten:p2p:Estateguru')
